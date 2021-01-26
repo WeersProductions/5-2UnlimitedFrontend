@@ -1,0 +1,36 @@
+{
+  "name": "koffieknopclient",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
+  "dependencies": {
+    "framer-motion": "2.6.13",
+    "moment-timezone": "0.5.31",
+    "react": "16.8.6",
+    "react-animated-text": "0.1.4",
+    "react-confetti": "6.0.0",
+    "react-dom": "16.8.6",
+    "react-live-clock": "5.0.5",
+    "react-moment": "1.0.0",
+    "react-open-weather": "0.6.2",
+    "react-open-weather-widget": "1.1.0",
+    "react-scripts": "2.1.8",
+    "readable-stream": "3.6.0",
+    "socket.io-client": "2.3.0",
+    "xmlhttprequest-ssl": "1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

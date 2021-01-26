@@ -1,0 +1,29 @@
+:root {
+  --frontColor: white;
+  --backColor1: #53a0fd;
+  --backColor2: #01c2f3;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+}
+
+body1 {
+  background: linear-gradient(90deg, var(--backColor1), var(--backColor2));
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  overflow: hidden;
+  color: var(--frontColor);
+  width: 100vw;
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(90deg, var(--backColor1), var(--backColor2));
+}
+
+.App::-webkit-scrollbar {
+  display: none;
+}
