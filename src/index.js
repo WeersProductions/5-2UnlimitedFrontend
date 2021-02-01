@@ -1,5 +1,3 @@
-import ReactWeather from "react-open-weather-widget";
-import "react-open-weather/lib/css/ReactWeather.css";
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import Confetti from "react-confetti";
@@ -22,12 +20,6 @@ const imageVariant = {
   },
   visible: {
     opacity: 1
-    // opacity: [0.4, 1],
-    // y: ["-25%", "0%"],
-    // transition: {
-    //   duration: 7,
-    //   times: [0, 1]
-    // }
   }
 };
 
@@ -37,12 +29,6 @@ const animationVariant = {
   },
   visible: {
     opacity: 1
-    // opacity: [0.4, 0.9, 1],
-    // y: ["25%", "10%", "0%"],
-    // transition: {
-    //   duration: 15,
-    //   times: [0, 0.3, 1]
-    // }
   }
 };
 
