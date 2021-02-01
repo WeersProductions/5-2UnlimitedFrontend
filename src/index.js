@@ -1,5 +1,3 @@
-import ReactWeather from "react-open-weather-widget";
-import "react-open-weather/lib/css/ReactWeather.css";
 import { motion } from "framer-motion";
 import React, { useEffect } from "react";
 import Confetti from "react-confetti";
@@ -8,6 +6,7 @@ import FancyTime from "./fancyClock/FancyTime";
 import Quote from "./Quote";
 import Clock from "react-live-clock";
 import { Wave } from "react-animated-text";
+import { styles, getStyle } from "./styles";
 
 import io from "socket.io-client";
 
@@ -20,12 +19,7 @@ const imageVariant = {
     opacity: 0
   },
   visible: {
-    opacity: [0.4, 1],
-    y: ["-25%", "0%"],
-    transition: {
-      duration: 7,
-      times: [0, 1]
-    }
+    opacity: 1
   }
 };
 
@@ -34,12 +28,7 @@ const animationVariant = {
     opacity: 0
   },
   visible: {
-    opacity: [0.4, 0.9, 1],
-    y: ["25%", "10%", "0%"],
-    transition: {
-      duration: 15,
-      times: [0, 0.3, 1]
-    }
+    opacity: 1
   }
 };
 
@@ -64,6 +53,7 @@ export default function App() {
     weather: "visible"
   });
   const [coffeeFreshness, setCoffeeFreshness] = React.useState(0);
+  const [siteStyle, setSiteStyle] = React.useState(styles[0]);
 
   const Screenmove = async () => {
     await setAnimationTarget({
@@ -130,7 +120,19 @@ export default function App() {
       setLastCoffeeTime(new Date());
     });
     socket.on("refreshClients", (data) => {
+      console.log("refresh client!");
       window.location.reload();
+    });
+    socket.on("setStyle", (data) => {
+      console.log("setStyle", data);
+      if (data.styleName) {
+        let newStyle = getStyle(data.styleName);
+        if (newStyle) {
+          setSiteStyle(newStyle);
+        }
+      } else if (data.customStyle) {
+        setSiteStyle(data.customStyle);
+      }
     });
     // Get the current lastCoffeeTime.
     fetch("https://api.5-2unlimited.com/koffieknop")
@@ -153,28 +155,36 @@ export default function App() {
     SetTime(lastCoffeeTime, currentTime);
   }, [lastCoffeeTime, currentTime]);
 
-  const confettiOpacity = Math.max(0, (coffeeFreshness - 0.6) * 3.5);
+  useEffect(() => {
+    // Update every time the currentTime changes.
+    // This changes the style based on periods.
+    let newStyle;
+    if (currentTime.getMonth() === 11) {
+      newStyle = getStyle("kerst");
+    } else if (currentTime.getMonth() === 8) {
+      newStyle = getStyle("blue");
+    } else {
+      newStyle = getStyle("huisstijl");
+    }
+    setSiteStyle((style) => (style.name !== newStyle ? newStyle : style));
+  }, [currentTime]);
 
+  const confettiOpacity = Math.max(0, (coffeeFreshness - 0.6) * 3.5);
   return (
     <div
       className="App Kerst"
       style={{
-        "--backColor1": "#c7453c",
-        "--backColor2": "#961f17",
+        ...siteStyle.styles,
         overflow: "hidden"
       }}
     >
       {coffeeFreshness > 0.5 && (
         <Confetti
-          colors={["#ede2e1", "#dedad9", "#f2f0f0"]}
+          colors={siteStyle.confetti.colors}
           opacity={confettiOpacity}
-          numberOfPieces={confettiOpacity * 200}
+          numberOfPieces={confettiOpacity * 150}
           wind={Math.max(0, 0.5 - confettiOpacity)}
-          drawShape={(ctx) => {
-            ctx.beginPath();
-            ctx.arc(0, 0, 3, 0, 2 * Math.PI);
-            ctx.fill();
-          }}
+          drawShape={siteStyle.confetti.drawShape}
         />
       )}
       <div style={{ height: "90vh" }}>
@@ -184,7 +194,13 @@ export default function App() {
         <motion.div
           variants={animationVariant}
           animate={animationTarget.title}
-          style={{ transform: "scale(0.5)" }}
+          style={{
+            transform: "scale(0.5)",
+            marginLeft: "-2rem",
+            marginRight: "-2rem",
+            display: "flex",
+            justifyContent: "center"
+          }}
         >
           <Quote text="Koffie knop" />
         </motion.div>
@@ -201,7 +217,7 @@ export default function App() {
           <FancyTime number={minute1} />M
           <div style={{ margin: "4rem", fontSize: "3rem" }}>
             <Wave
-              text="KERST!"
+              text="PLAT!"
               effect="stretch"
               effectChange={1.5}
               effectDuration={0.7}
@@ -212,17 +228,33 @@ export default function App() {
         <motion.img
           variants={imageVariant}
           animate={animationTarget.image}
-          alt="Bier tochtje met het huis"
-          src="Week1.jpg"
+          alt="Huis logo"
+          src="logo.jpeg"
           style={{
             marginTop: "2rem",
-            height: "41vh",
-            right: "1rem",
+            width: "20vw",
+            left: "1.5rem",
             position: "absolute",
-            bottom: "1rem",
+            bottom: "1.5rem",
             borderRadius: "4px"
           }}
-        ></motion.img>
+        />
+
+        <motion.img
+          variants={imageVariant}
+          animate={animationTarget.image}
+          alt="Joost (onze kat)"
+          src="joost.jpg"
+          style={{
+            marginTop: "2rem",
+            width: "20vw",
+            right: "1.5rem",
+            position: "absolute",
+            bottom: "1.5rem",
+            borderRadius: "4px",
+            radius: "8px"
+          }}
+        />
       </div>
       <motion.div
         variants={imageVariant}
@@ -234,14 +266,7 @@ export default function App() {
           bottom: "1rem",
           left: "1rem"
         }}
-      >
-        <ReactWeather
-          forecast={weatherDate}
-          apikey="4a99078b01f5ad98864e26e9e216c918"
-          type="city"
-          city="Enschede"
-        />
-      </motion.div>
+      ></motion.div>
       <motion.div
         style={{
           position: "absolute",
