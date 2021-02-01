@@ -170,7 +170,6 @@ export default function App() {
   }, [currentTime]);
 
   const confettiOpacity = Math.max(0, (coffeeFreshness - 0.6) * 3.5);
-
   return (
     <div
       className="App Kerst"
@@ -183,7 +182,7 @@ export default function App() {
         <Confetti
           colors={siteStyle.confetti.colors}
           opacity={confettiOpacity}
-          numberOfPieces={confettiOpacity * 200}
+          numberOfPieces={confettiOpacity * 150}
           wind={Math.max(0, 0.5 - confettiOpacity)}
           drawShape={siteStyle.confetti.drawShape}
         />
